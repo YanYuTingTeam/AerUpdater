@@ -1,6 +1,0 @@
-name: AerUpdater
-version: 1.0
-main: com.aermini.updater.AerUpdater
-api-version: 1.8
-author: AerMini
-load: STARTUP

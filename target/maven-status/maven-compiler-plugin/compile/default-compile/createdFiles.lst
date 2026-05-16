@@ -1,7 +1,0 @@
-com\aermini\updater\manager\UpdateManager.class
-com\aermini\updater\listener\DynamicEventListener.class
-com\aermini\updater\manager\ConfigManager.class
-com\aermini\updater\manager\UpdateManager$1.class
-com\aermini\updater\util\FileUtil.class
-com\aermini\updater\listener\DynamicEventListener$1.class
-com\aermini\updater\AerUpdater.class
