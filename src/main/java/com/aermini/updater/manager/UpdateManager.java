@@ -9,6 +9,8 @@ import java.nio.file.*;
 import java.nio.file.attribute.BasicFileAttributes;
 import java.util.concurrent.atomic.AtomicBoolean;
 
+import org.bukkit.Bukkit;
+
 public class UpdateManager {
     private final AerUpdater plugin;
 
@@ -57,15 +59,23 @@ public class UpdateManager {
             e.printStackTrace();
         }
 
-        if (hasUpdate.get()) {
-            plugin.getLogger().info("UPDATER > 检测到更新，正在重启服务器");
-            new Thread(() -> {
-                try {
-                    Thread.sleep(5000);
-                    Runtime.getRuntime().halt(0);
-                } catch (Exception ignored) {}
-            }).start();
-            
+        if (hasUpdate.get()) executeRestart();
+    }
+
+    private void executeRestart() {
+        plugin.getLogger().info("UPDATER > 检测到更新，准备重启服务器");
+        new Thread(() -> {
+            try {
+                Thread.sleep(10000); 
+                plugin.getLogger().warning("UPDATER > 关服超时 强制终止");
+                Runtime.getRuntime().halt(0); 
+            } catch (Exception ignored) {}
+        }).start();
+
+        if (plugin.isEnabled()) {
+            Bukkit.getScheduler().runTask(plugin, () -> {Bukkit.shutdown();});
+        } else {
+            // onload
             System.exit(0);
         }
     }
