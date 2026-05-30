@@ -25,7 +25,6 @@ public class UpdateManager {
         File bukkitUpdateDir = new File(pluginsDir, "update");
 
         if (!sourceDir.exists()) return;
-        if (!bukkitUpdateDir.exists()) bukkitUpdateDir.mkdirs();
 
         AtomicBoolean hasUpdate = new AtomicBoolean(false);
         Path sourcePath = sourceDir.toPath();
@@ -40,7 +39,8 @@ public class UpdateManager {
 
                     Path target = pluginsPath.resolve(sourcePath.relativize(file));
                     if (FileUtil.isNewer(file, target)) {
-                        if (name.toLowerCase().endsWith(".jar")) {
+                        if (name.toLowerCase().endsWith(".jar") && Files.exists(target)) {
+                            if (!bukkitUpdateDir.exists()) bukkitUpdateDir.mkdirs();
                             Files.copy(file, bukkitUpdateDir.toPath().resolve(name), 
                                 StandardCopyOption.REPLACE_EXISTING, StandardCopyOption.COPY_ATTRIBUTES);
                         } else {
@@ -59,6 +59,13 @@ public class UpdateManager {
 
         if (hasUpdate.get()) {
             plugin.getLogger().info("UPDATER > 检测到更新，正在重启服务器");
+            new Thread(() -> {
+                try {
+                    Thread.sleep(5000);
+                    Runtime.getRuntime().halt(0);
+                } catch (Exception ignored) {}
+            }).start();
+            
             System.exit(0);
         }
     }
